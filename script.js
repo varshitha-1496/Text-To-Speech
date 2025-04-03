@@ -7,7 +7,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadVoices() {
         voices = speechSynthesis.getVoices();
-        voiceSelect.innerHTML = voices
+        
+        // List of required Indian languages
+        const indianLanguages = ["hi-IN", "ta-IN", "te-IN", "kn-IN", "ml-IN", "bn-IN", "gu-IN", "mr-IN", "pa-IN", "ur-IN"];
+        let selectedVoices = {};
+
+        // Pick only one voice per language
+        voices.forEach(voice => {
+            if (indianLanguages.includes(voice.lang) && !selectedVoices[voice.lang]) {
+                selectedVoices[voice.lang] = voice;
+            }
+        });
+
+        // Populate dropdown with only one voice per language
+        voiceSelect.innerHTML = Object.values(selectedVoices)
             .map(voice => `<option value="${voice.name}" data-lang="${voice.lang}">${voice.name} (${voice.lang})</option>`)
             .join("");
     }
